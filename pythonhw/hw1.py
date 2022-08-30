@@ -22,11 +22,21 @@ def q3(myarray):
 def q4(mystringarray):
     """ return the position of the first occurrence of the string 'hi' or -1 if it is not found.
     you cannot change how the array is iterated and you cannot use any list operations on mystringarray"""
-
+    position = 0;
     for mystring in mystringarray:
-        pass
-
+        if(mystring == "hi"):
+            return position;
+        position += 1;
+    return -1;
+    
 
 def q5(myarray):
     """ return a dictionary containing the counts of items in the input array """
-    pass
+    dic = {};
+    
+    for letter in myarray:
+        if( letter in dic ):
+            dic[letter] += 1;
+        else:    
+            dic[letter] = 1;
+    return dic;   
