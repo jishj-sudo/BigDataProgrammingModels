@@ -1,8 +1,7 @@
-import re
 
 def q1(mystring):
     """ split the string by tabs to get an array and return the array """
-    return re.split("\t+",mystring);       
+    return mystring.split("\t");       
 
 def q2(mystring):
     """ split the string by tabs to get an array and return the second element of the array """
