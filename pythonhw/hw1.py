@@ -39,3 +39,4 @@ def q5(myarray):
         else:    
             dic[letter] = 1;
     return dic;   
+
