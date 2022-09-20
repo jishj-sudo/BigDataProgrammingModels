@@ -7,10 +7,10 @@ class WordCount(MRJob):  #MRJob version
         words = line.split()
         for w in words:
             if (len(w) > 2): # only include words greater than length 2    
-                counter[len(w)] = counter.get(len(w),0)                         
-        for k,v in counter:
+                counter[len(w)] = counter.get(len(w),0) +1;                        
+        for k,v in counter.items():
             if(v>1):
-                yield (len(k), ) 
+                yield (k,v) 
 
     def reducer(self, key, values):
         yield (key, sum(values))
