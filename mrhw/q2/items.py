@@ -12,17 +12,17 @@ class Items(MRJob):  #MRJob version
             yield(stock_code,(country,quantity))
 
     def reducer(self, key, values):
-        log_of_countries = {}
+        frequency = {}
         total_quantity = 0;
         vals = list(values)
    
         for country,quantity in vals: # aggregate quantity by country
-            log_of_countries[country] = log_of_countries.get(country,0) + quantity
+            frequency[country] = frequency.get(country,0) + 1
             total_quantity += quantity
         
-        num_countries = len(log_of_countries)
-        most_popular_country = max(log_of_countries, key = log_of_countries.get)
-        log_of_countries.clear()
+        num_countries = len(frequency)
+        most_popular_country = max(frequency, key = frequency.get)
+        frequency.clear()
         yield(key, (total_quantity, num_countries, most_popular_country))   
 
 if __name__ == '__main__':
