@@ -23,19 +23,19 @@ class WordCount(MRJob):  #MRJob version
             self.mapper_cache.clear()
 
 
-   # def reducer_init(self):
-    #    self.greatest_sum = 0
-     #   self.most_frequent = "nothing yet"
+    def reducer_init(self):
+        self.greatest_sum = 0
+        self.most_frequent = "nothing yet"
 
     def reducer(self, key, values):
         agg_sum = sum(values)
-     #   if self.greatest_sum <= agg_sum:
-      #      self.greatest_sum = agg_sum
-       #     self.most_frequent = key
+        if self.greatest_sum <= agg_sum:
+            self.greatest_sum = agg_sum
+            self.most_frequent = key
         yield (key, agg_sum)
 
-    #def reducer_final(self):
-       # yield("MostFrequent", self.most_frequent)
+    def reducer_final(self):
+        yield("MostFrequent", self.most_frequent)
         
 if __name__ == '__main__':
     WordCount.run()   # MRJob version
