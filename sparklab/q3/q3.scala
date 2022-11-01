@@ -16,11 +16,11 @@ object AmountSpentPerCountry {
   def doAmountSpentPerCountry(sc: SparkContext) = {
     val input = sc.textFile("/datasets/retailtab")
     val splitInput = input.map(_.split("\\t")).filter(x => x(3) != "Quantity")
-    val simplifiedInput = splitInput.map(x => (x(7).toString, x(3).toDouble * x(6).toDouble))
+    val simplifiedInput = splitInput.map(x => (x(7).toString, x(3).toFloat * x(5).toFloat))
     val amountPerCountry = simplifiedInput.reduceByKey((x,y) => x+y)
     amountPerCountry
   }
-  def saveit(amountPerCountry: org.apache.spark.rdd.RDD[(String, Double)]) = {
+  def saveit(amountPerCountry: org.apache.spark.rdd.RDD[(String, Float)]) = {
     amountPerCountry.saveAsTextFile("sparklab-q3")
   }
 }
