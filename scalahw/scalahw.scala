@@ -19,31 +19,30 @@ object HW {
       //you must do the same for the output type (see scala slides)
       //do not use return statements.
      //""
-      val informal: String = "howdy"
-      val formal: String = "hello"
       val lowerName: String = name.toLowerCase
-      val greeting: String = if (age <21) {"${informal}, ${lowerName}"} else {"${formal}, ${lowerName}"}
+      val greeting: String = if (age <21) {s"howdy, $lowerName"} else {s"hello, $lowerName"}
       greeting
    }
 
-   def q3_polynomial(arr: Seq[Double]): Int = {
+   def q3_polynomial(arr: Seq[Double]): Double = {
       //the types of the input parameters have been declared.
       //you must do the same for the output type (see scala slides)
       //do not use return statements.
-      arr.foldLeft((0.toDouble,1.toDouble))({(x,y) => (x._1+x._2*y,x._2+1)})._1.toInt
+      arr.foldLeft((0.toDouble,1.toDouble))({(x,y) => (x._1 +x._2 * y, x._2 + 1)})._1
    }
 
    def q4_application(x: Int, y: Int, z: Int)(f: (Int, Int) => Int):Int = {
       //the types of the input parameters have been declared.
       //you must do the same for the output type (see scala slides)
       //do not use return statements.
-      1
+      f(f(x,y),z)
    }
    def q5_stringy(start: Int, n: Int): Vector[String] = {
-     Vector("1","2","3")
+     val vec = Vector.range(start,start+n)
+     vec.map(_.toString)
    }  
    def q6_modab(a: Int, b: Int, c: Vector[Int]): Vector[Int] = {
-     Vector(1,2,3)
+     c.filter(x => x >= a && x % b != 0)
    }
    def q7_count(arr: Vector[Int])(f: (Int) => (Boolean)): Int = {
      1
