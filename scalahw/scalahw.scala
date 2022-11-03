@@ -45,14 +45,23 @@ object HW {
      c.filter(x => x >= a && x % b != 0)
    }
    def q7_count(arr: Vector[Int])(f: (Int) => (Boolean)): Int = {
-     1
+    if (arr.isEmpty) {0} 
+    
+    else {if (f(arr.head)) {1+q7_count(arr.tail)(f)} else {q7_count(arr.tail)(f)}} 
+   }
+   @annotation.tailrec 
+   def q8_count_tail(arr: Vector[Int],count: Int = 0)(f: (Int) => (Boolean)): Int = {
+    
+    if (arr.isEmpty) {count} 
+    
+    else {if (f(arr.head)) {q8_count_tail(arr.tail,1+count)(f)} else {q8_count_tail(arr.tail,count)(f)}} 
   }
-  /* @annotation.tailrec */
-   def q8_count_tail(arr: Vector[Int])(f: (Int) => (Boolean)): Int = {
-     2
-  }
-  def q9_neumaier(input: Seq[Double]): Int = {
-    3
+  def q9_neumaier(input: Seq[Double]): Double = {
+    val initialState = Neumaier(0,0)
+    val finalState =input.foldLeft(initialState)((s,i) => if (s.sum.abs >= i.abs) 
+                                        {Neumaier(s.sum + i, s.c + ((s.sum - (s.sum + i)) + i))}
+                                   else {Neumaier(s.sum + i, s.c + ((i     - (s.sum + i)) + s.sum))})
+    finalState.sum + finalState.c
   }
    // create the rest of the functions yourself
    // in order for the code to compile, you need to (at the very least) create
