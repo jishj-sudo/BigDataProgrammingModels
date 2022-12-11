@@ -6,21 +6,26 @@ import org.apache.spark.sql.catalyst.expressions.aggregate._
 import org.apache.spark.sql.expressions._
 import org.apache.spark.sql.functions._
 import org.apache.spark.sql.types._
-import org.apache.spark.sql.Row
-import spark.implicits._
+
 
 object DFlab {
+     val spark = SparkSession.builder.getOrCreate()
+     import spark.implicits._
+
     def main(Args: Array[String]) = {
-        val spark = getSS()
-        //val df = getFB(spark)
-        val df = getTestFB(spark)
+        //val spark = getSS()
+        val df = getFB(spark)
+        //val df = getTestFB(spark)
+        val num_triangles = numTriangles(df)
+        writeDF(num_triangles)
 
 
   }
-    def getSS() = {
-        val session = SparkSession.builder.getOrCreate()
-        session
-  }
+//    def getSS() = {
+  //      val spark = SparkSession.builder.getOrCreate()
+    //    import spark.implicits._
+      //  spark
+ // }
 
     def getFB(spark: SparkSession): DataFrame = {
        val data_location = "/datasets/facebook/"
@@ -29,7 +34,14 @@ object DFlab {
        val df = spark.read.format("csv")
                 .schema(mySchema)
                 .option("delimiter", " ")
-                .load(data_location)    
+                .load(data_location) 
+       df   
+  }
+
+    def writeDF(df: DataFrame) = {
+        df.write.format("csv")
+                   .option("header","true")
+                   .save("FacebookTriangles")
   }
     def getTestFB(spark: SparkSession): DataFrame = {
        
@@ -58,9 +70,10 @@ object DFlab {
         df
   }
 
-    def numTriangles(graph: DataFrame):  = {
-        val flipped = graph.selectExpr("user2 as user1", "user1 as user2")
-        val combined = graph.union(flipped).distinct()
+    def numTriangles(graph: DataFrame): DataFrame  = {
+        
+        val flipped = graph.selectExpr("user2 as user1", "user1 as user2")     
+        val combined = graph.union(flipped).distinct
 
         val midStart = combined.selectExpr("user1 as mid0", "user2 as start")
         val midEnd = combined.selectExpr("user1 as mid1", "user2 as end")
@@ -80,8 +93,7 @@ object DFlab {
         //
         // "combined" rdd has the list of edges, that is what we need to check
         // so we need to check whether ("A", "C") is in combined, whether ("D", "B") etc.
-        val triangle_condition = midStartEnd.col("start") === combined.col("user1") &&
-                                 midStartEnd.col("end") === combined.col("user2")
+        val triangle_condition = midStartEnd.col("start") === combined.col("user1") && midStartEnd.col("end") === combined.col("user2")
         val all_joined = cleaned.join(combined,triangle_condition)
         
         //     (("A", "C"), ("D", 1))  -- there is a path from A to D to C, and also edge AC
@@ -90,7 +102,9 @@ object DFlab {
         //     (("D", "A"), ("C", 1))
         //     (("D", "C"), ("A", 1))
         //     etc.
-        all_joined.count() / 6
+        val num_triangles = all_joined.count/6
+        val dff = List((num_triangles)).toDF("Triangles")
+        dff
  }
  
 }
